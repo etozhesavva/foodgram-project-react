@@ -3,7 +3,7 @@
 «Продуктовый помощник»: сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволит пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 
 
 ### Авторы:
-- Daniil Bibikov (Jon-Makkonahi) https://github.com/Jon-Makkonahi
+- Savva Romanov (etozhesavva) https://github.com/etozhesavva
 
 ### Технологии:
 - Python
@@ -17,7 +17,7 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone git@github.com:Jon-Makkonahi/foodgram-project-react.git
+git clone git@github.com:etozhesavva/foodgram-project-react.git
 ```
 
 ```
@@ -79,5 +79,4 @@ sudo docker-compose down -v
 ```
 Ссылка на проект
 ```
-http://51.250.86.0/
 ```
