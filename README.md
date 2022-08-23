@@ -79,4 +79,5 @@ sudo docker-compose down -v
 ```
 Ссылка на проект
 ```
+http://51.250.7.32/
 ```
