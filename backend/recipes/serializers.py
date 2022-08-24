@@ -37,6 +37,10 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField()
+    get_ingredients = IngredientRecipeSerializer(
+        many=True,
+        required=True
+    )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
 
@@ -57,11 +61,6 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         return user.is_authenticated and Purchase.objects.filter(
             recipe=obj, user=user
         ).exists()
-
-    def get_ingredients(self, obj):
-        objects = IngredientInRecipe.objects.filter(recipe=obj)
-        serializer = IngredientRecipeSerializer(objects, many=True)
-        return serializer.data
 
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
@@ -130,17 +129,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return data
 
     def ingredient_create(self, ingredient_data, recipe):
-        for ingredient in ingredient_data:
-            ingredient_model = get_object_or_404(
+        IngredientInRecipe.objects.bulk_create([IngredientInRecipe(
+            ingredient=get_object_or_404(
                 Ingredient,
                 id=ingredient['id']
-            )
-            amount = ingredient['amount']
-            IngredientInRecipe.objects.create(
-                ingredient=ingredient_model,
-                recipe=recipe,
-                amount=amount
-            )
+            ),
+            recipe=recipe,
+            amount=ingredient['amount']
+             ) for ingredient in ingredient_data])
 
     def create(self, validated_data):
         tags_data = validated_data.pop('tags')

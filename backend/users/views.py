@@ -37,36 +37,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return FollowSerializer
         return CustomUserSerializer
 
-    def create(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        email = serializer.validated_data.get('email')
-        first_name = serializer.validated_data.get('first_name')
-        last_name = serializer.validated_data.get('last_name')
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-        )
-        user.set_password(serializer.validated_data.get('password'))
-        user.save()
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK
-        )
-
     @action(
         methods=['GET'],
         detail=False,
         url_path='me',
     )
     def users_profile(self, request):
-        user = get_object_or_404(
-            User,
-            username=request.user.username
-        )
+        user = request.user.username
         serializer = self.get_serializer(user)
         return Response(
             serializer.data,
