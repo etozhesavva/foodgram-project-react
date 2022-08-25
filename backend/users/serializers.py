@@ -21,7 +21,8 @@ class UserCreateSerializer(UserCreateSerializer):
         model = User
 
     def validate_username(self, value):
-        if value == 'Me' or 'me':
+        banned_answer = 'me'
+        if value.lower == banned_answer.lower:
             raise serializers.ValidationError(
                 'Вы не можете зарегистрироваться под именем me')
         return value
@@ -89,3 +90,9 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
+
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        return user.is_authenticated and Follow.objects.filter(
+            author=obj, user=user
+        ).exists()

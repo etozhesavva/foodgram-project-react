@@ -43,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
         url_path='me',
     )
     def users_profile(self, request):
-        user = request.user.username
+        user = request.user
         serializer = self.get_serializer(user)
         return Response(
             serializer.data,
