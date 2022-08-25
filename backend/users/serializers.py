@@ -4,7 +4,7 @@ from recipes.models import Recipe
 from rest_framework import serializers
 
 from .models import Follow, User
-from ._get_is_subscribed import get_is_subscribed
+from .utils import get_is_subscribed
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -51,7 +51,8 @@ class CustomUserSerializer(UserSerializer):
         )
         model = User
 
-    get_is_subscribed()
+    def get_is_subscribed(self, obj):
+        return get_is_subscribed(self, obj)
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -88,4 +89,5 @@ class FollowSerializer(serializers.ModelSerializer):
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
 
-    get_is_subscribed()
+    def get_is_subscribed(self, obj):
+        return get_is_subscribed(self, obj)
