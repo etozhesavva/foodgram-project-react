@@ -4,6 +4,7 @@ from recipes.models import Recipe
 from rest_framework import serializers
 
 from .models import Follow, User
+from ._get_is_subscribed import get_is_subscribed
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -22,7 +23,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
     def validate_username(self, value):
         banned_answer = 'me'
-        if value.lower == banned_answer.lower:
+        if value.lower() == banned_answer:
             raise serializers.ValidationError(
                 'Вы не можете зарегистрироваться под именем me')
         return value
@@ -50,11 +51,7 @@ class CustomUserSerializer(UserSerializer):
         )
         model = User
 
-    def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        return user.is_authenticated and Follow.objects.filter(
-            author=obj, user=user
-        ).exists()
+    get_is_subscribed()
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -91,8 +88,4 @@ class FollowSerializer(serializers.ModelSerializer):
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
 
-    def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        return user.is_authenticated and Follow.objects.filter(
-            author=obj, user=user
-        ).exists()
+    get_is_subscribed()
